@@ -46,4 +46,38 @@ export class ParametrosController{
             }
         });
     }
+    @Get('establecerCookie')
+    establecerCookie(
+        @Req() request,
+        @Res() response
+    ) {
+        const parametros = {
+            nombreCookie: request.query.nombre,
+            valorCookie: request.query.valor,
+        };
+        response.cookie(parametros.nombreCookie, parametros.valorCookie);
+        return response.send(parametros)
+    }
+
+    @Get('cookie/:nombre')
+    leerCookie(
+        @Req() request,
+        @Res() response
+    ) {
+        const nombreCookie = request.params.nombre;
+        const existeCookie = request.cookies[nombreCookie];
+        if (existeCookie) {
+            return response.send({
+                mensaje: "En Cache",
+                valor: existeCookie,
+
+            })
+        } else {
+            return response
+                .status(404)
+                .send({
+                    mensaje: 'No en Cache'
+                })
+        }
+    }
 }
